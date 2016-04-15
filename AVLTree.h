@@ -69,7 +69,7 @@ class AVLTree{
     private:
         struct AVLNode{
              Comparable data;
-             int  height;
+             int  height; //树的高度
              AVLNode* left;
              AVLNode* right;
              AVLNode(const Comparable& element, AVLNode* l, AVLNode* r, int h = 0)
@@ -154,7 +154,7 @@ class AVLTree{
             else;
             t->height = max(height(t->left),height(t->right))+1;
         }
-
+	//单左旋转
         void rotateWithLeftChild(AVLNode *& k2){
             AVLNode *k1 = k2->left;
             k2->left = k1->right;
@@ -163,7 +163,7 @@ class AVLTree{
             k1->height = max(height(k1->left),k2->height) + 1;
             k2 = k1;
         }
-
+	//单右旋转
         void rotateWithRightChild(AVLNode* &k2){
             AVLNode *k1 = k2->right;
             k2->right = k1->left;

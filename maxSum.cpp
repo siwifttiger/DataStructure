@@ -73,16 +73,22 @@ int maxSubSum3(const vector<int>& a, int left, int right){
 
 int maxSubSum4(const vector<int>& a){
      int thisSum = 0,maxSum = 0;
+     int start = 0, len = 1;
      for(int i = 0; i < a.size(); ++i){
          thisSum += a[i];
          if(thisSum > maxSum){
               maxSum = thisSum;
+              ++len;
          }
          else if(thisSum < 0){
              thisSum = 0;
+             len = 1;
+             start = i+1;
          }
 
+
      }
+     cout << a[start] << " " << a[start+len-1] << endl;
      return maxSum;
 }
 
