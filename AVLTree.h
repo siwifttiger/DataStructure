@@ -1,6 +1,7 @@
 #ifndef AVLTREE_H
 #define AVLTREE_H
 #include<iostream>
+#include<stdlib.h>
 #include"dsexceptions.h"
 using namespace std;
 
@@ -36,7 +37,7 @@ class AVLTree{
         }
 
         const Comparable& findMax() const{
-	           if(isEmpty()){throw UnderflowException();}  
+	           if(isEmpty()){throw UnderflowException();}
 	     return findMax(root)->data;
         }
 
@@ -55,7 +56,7 @@ class AVLTree{
             insert(x,root);
         }
         void remove(const Comparable& x){
-
+            remove(x,root);
         }
 
 
@@ -154,6 +155,58 @@ class AVLTree{
             else;
             t->height = max(height(t->left),height(t->right))+1;
         }
+
+
+        void remove(const Comparable & x, AVLNode*& t){
+            if(t == NULL){
+                return ;
+            }
+
+            if(x < t->data){
+                 remove(x,t->left);
+            }
+            else if(t->data < x){
+                 remove(x,t->right);
+            }
+
+            else{
+                if((t->left == NULL ) || (t->right == NULL)){
+                    AVLNode * temp = root->left? root->left : root->right;
+                    //没有孩子节点的情况
+                    if(temp == NULL){
+                         temp = t;
+                         t = NULL;
+                    }
+                    //只有一个孩子节点的情况
+                    else{
+                        *t = *temp;
+                    }
+                    free(temp);
+                }
+                else{ //有两个孩子节点的情况
+                    AVLNode* temp = findMin(t->right);
+                    t->data = temp->data;
+                    remove(temp->data,t->right);
+                }
+            }
+            if(t == NULL)
+                return;
+            t->height = max(height(t->left),height(t->right))+1;
+            int balance = height(t->left)-height(t->right);
+            if(balance > 1 && height(t->left->left)-height(t->left->right)>= 0){
+                 rotateWithLeftChild(t);
+            }
+            if(balance > 1 && height(t->left->left)-height(t->left->right)< 0){
+                 doubleWithLeftChild(t);
+            }
+            if(balance < -1 && height(t->right->left)-height(t->right->right)<= 0){
+                rotateWithRightChild(t);
+            }
+            if(balance < -1 && height(t->right->left)-height(t->right->right) > 0){
+                 doubleWithRightChild(t);
+            }
+        }
+
 	//单左旋转
         void rotateWithLeftChild(AVLNode *& k2){
             AVLNode *k1 = k2->left;
