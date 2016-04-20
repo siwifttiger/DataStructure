@@ -26,6 +26,19 @@ int nextPrime(int n){
     return n;
 }
 
+int hash(int key){
+     return key;
+}
+
+
+int hash(const string& key){
+    int hashVal = 0;
+    for(int i = 0; i < key.length(); i++){
+        hashVal = 37*hashVal + key[i];
+    }
+    return hashVal;
+}
+
 template<typename HashObj>
 class HashTable{
     public:
@@ -33,7 +46,7 @@ class HashTable{
             :currentSize(0)
         {theList.resize(101);}
 
-        bool contains(const HashObj& x) const{
+        bool contains(const HashObj& x) {
              const list<HashObj>& whichList = theList[myhash(x)];
              return find(whichList.begin(),whichList.end(),x) != whichList.end();
         }
@@ -43,9 +56,11 @@ class HashTable{
                  theList[i].clear();
             }
         }
-
-        bool insert(const HashObj& x) const{
-             const list<HashObj>& whichList = theList[myhash(x)];
+	//一开始编译报错的原因是因为在insert后面多加了const，如果这样的话，常成员函数是不能改变成员变量的，所以++currentSize编译无法通过
+	//如果加了const ，里面调用非const的函数也不可以了。（因为非const的成员函数有改变成员变量的企图）
+	//但是如果成员变量是mutable的话就可以了。
+        bool insert(const HashObj& x) {
+            list<HashObj>& whichList = theList[myhash(x)];
              if(find(whichList.begin(),whichList.end(),x) != whichList.end())
                  return false;
              whichList.push_back(x);
@@ -56,7 +71,7 @@ class HashTable{
         }
 
         bool remove(const HashObj& x){
-             const list<HashObj>& whichList = theList[myhash(x)];
+           list<HashObj>& whichList = theList[myhash(x)];
             typename list<HashObj>::iterator itr= find(whichList.begin(),whichList.end(),x);
              if(itr == whichList.end()){
                   return false;
@@ -67,7 +82,7 @@ class HashTable{
         }
     private:
         vector<list<HashObj> > theList;
-        int  currentSize;
+         int  currentSize;
         void rehash(){
              vector<list<HashObj> > oldList = theList;
              theList.resize(nextPrime(theList.size()*2));
@@ -94,17 +109,8 @@ class HashTable{
 
 };
 
-int hash(const string& key){
-    int hashVal = 0;
-    for(int i = 0; i < key.length(); i++){
-        hashVal = 37*hashVal + key[i];
-    }
-    return hashVal;
-}
 
-int hash(int key){
-     return key;
-}
+
 
 
 #endif
