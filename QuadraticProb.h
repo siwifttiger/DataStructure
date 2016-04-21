@@ -93,7 +93,7 @@ class HashTable{
 
 	//原本查找位置的函数为 h(x) + i^2
 	//也即 h(x)+(i-1)^2 + 2i-1
-	//下面的实现将 h(x) + (i-2)^2 当做currentSize
+	//下面的实现将 h(x) + (i-2)^2 当做currentPos
 	//所以以后只用从1开始顺序加上奇数即可
 	//利用offset，每次将offset加2，比第一个公式高效很多
         int findPos(const HashObj& x) const{
