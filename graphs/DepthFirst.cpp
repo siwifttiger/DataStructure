@@ -69,7 +69,7 @@ public:
 				DFSUtil(i,visit);
 		}
 	}
-	//非递归实现
+	//非递归实现,但是也只能访问连通图的所有点
 	void DFSNRec(int v){
 		bool *visit = new bool[V];
 		for(int i = 0; i < V; i++){
@@ -90,7 +90,33 @@ public:
 			}
 		}
 	}
-	
+	//非递归，访问所有点
+	void DFSNRec(){
+		bool *visit = new bool[V];
+		for(int i = 0; i < V; i++){
+			visit[i] = false;
+		}
+		stack<int> s;
+		for(int i = 0; i < V; i++){
+			while(!s.empty())
+				s.pop();
+			if(visit[i] == false){
+				s.push(i);
+				visit[i] = true;
+				while(!s.empty()){
+					int top = s.top();
+					cout << top << " ";
+					s.pop();
+					for(list<int>::iterator it = adj[top].begin(); it != adj[top].end(); it++){
+						if(!visit[*it]){
+							visit[*it] = true;
+							s.push(*it);
+						}
+					}
+				}
+			}
+		}
+	}
 	void printGraph(){
 		for(int i = 0; i < V; i++){
 			cout << "\n顶点"  << i << "的邻接链表是：\n";
@@ -121,5 +147,7 @@ int main(){
 	g.DFS();
 	cout << "\n深度优先遍历3\n";
 	g.DFSNRec(0);
+	cout << "\n深度优先遍历4\n";
+	g.DFSNRec();
 }
 
