@@ -1,4 +1,4 @@
-/*图的广度优先遍历
+/*图的深度优先遍历
 图用邻接链表表示*/
 #include<iostream>
 #include<queue>
