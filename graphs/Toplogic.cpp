@@ -3,6 +3,7 @@
 #include<queue>
 #include<list>
 #include<stack>
+#include<vector>
 using namespace std;
 
 class Graph{
@@ -216,6 +217,45 @@ public:
 		cout << endl;
 	}
 	
+	void toplogicSortInd(){
+		//首先计算入度
+		vector<int> indegree(V,0);
+		queue<int> q;
+		vector<int>top; //用来存储拓扑排序的结果
+		int count = 0;
+		for(int v = 0; v < V; v++){
+			list<int>::iterator itr;
+			for(itr = adj[v].begin(); itr != adj[v].end(); itr++){
+				indegree[*itr]++;
+			}
+		}
+		for(int u = 0; u < V; u++){
+			if(indegree[u] == 0) q.push(u);
+		}
+		while(!q.empty()){
+			int v = q.front();
+			top.push_back(v);
+			q.pop();
+			count++;
+			list<int>::iterator itr;
+			for(itr = adj[v].begin(); itr!=adj[v].end(); itr++){
+				if(--indegree[*itr] == 0)
+					q.push(*itr);
+			}
+			
+		}
+		if(count != V){
+			cout << "\n图中存在环，拓扑排序无法完成。\n";
+			return;
+		}
+		else{
+			for(int i = 0; i < V; i++){
+				cout << top[i] << " ";
+			}
+			cout << endl;
+		}
+	}
+	
 	void printGraph(){
 		for(int i = 0; i < V; i++){
 			cout << "\n顶点"  << i << "的邻接链表是：\n";
@@ -241,7 +281,7 @@ int main()
     g.addEdge(3, 1);
  
     cout << "Following is a Topological Sort of the given graph \n";
-    g.toplogicSortDFS();
+    g.toplogicSortInd();
  
     return 0;
 }
